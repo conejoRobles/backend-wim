@@ -1,0 +1,23 @@
+{
+  "name": "backend-wim",
+  "version": "1.0.0",
+  "description": "Backend para aplicación WIM",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/conejoRobles/backend-wim.git"
+  },
+  "author": "Matías Robles y Tamara Salgado",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/conejoRobles/backend-wim/issues"
+  },
+  "homepage": "https://github.com/conejoRobles/backend-wim#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "nodemon": "^2.0.4"
+  }
+}
