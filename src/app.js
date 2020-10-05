@@ -24,6 +24,7 @@ app.use((err, req, res, next) => {
     res.send('500 - Server Error')
 })
 app.use(require('./routes/empresa'))
+app.use(require('./routes/pasajero'))
 
 //Listen
 app.listen(app.get('port'), () => {

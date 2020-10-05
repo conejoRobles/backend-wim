@@ -2,7 +2,7 @@ const db = require('../db')
 const pasajero = {}
 
 pasajero.getAll = (req, res) => {
-    db.ref('Pasajero/').on('value', (snap) => {
+    db.ref('Pasajeros/').on('value', (snap) => {
         if (snap.val() !== null) {
             res.json({
                 ok: true,
@@ -14,14 +14,19 @@ pasajero.getAll = (req, res) => {
 }
 
 pasajero.add = (req, res) => {
-    db.ref('Pasajero/' + req.rut).once('value', (snap) => {
+
+    db.ref('Pasajeros/' + req.body.rut).once('value', (snap) => {
         if (snap.val() === null) {
-            db.ref('Pasajero/' + req.rut).set({
-                rut: req.rut,
-                nombre: req.nombre,
-                pass: req.pass,
-                correo: req.correo,
-                telefono: req.telefono
+            db.ref('Pasajeros/' + req.body.rut).set({
+                rut: req.body.rut,
+                nombre: req.body.nombre,
+                pass: req.body.pass,
+                correo: req.body.correo,
+                telefono: req.body.telefono
+            })
+            res.json({
+                ok: true,
+                mensaje: 'Pasajero agregado con exito '
             })
         } else {
             res.json({
@@ -33,7 +38,7 @@ pasajero.add = (req, res) => {
 }
 
 pasajero.getByID = (req, res) => {
-    db.ref('Pasajero/' + req.rut).once('value', (snap) => {
+    db.ref('Pasajeros/' + req.rut).once('value', (snap) => {
         if (snap.val() !== null) {
             res.json({
                 ok: true,
@@ -45,9 +50,9 @@ pasajero.getByID = (req, res) => {
 }
 
 pasajero.remove = (req, res) => {
-    db.ref('Pasajero/' + req.rut).once('value', (snap) => {
+    db.ref('Pasajeros/' + req.rut).once('value', (snap) => {
         if (snap.val() !== null) {
-            db.ref('Pasajero/' + req.rut).remove((err) => {
+            db.ref('Pasajeros/' + req.rut).remove((err) => {
                 if (err) {
                     res.send(err)
                 } else {

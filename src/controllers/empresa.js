@@ -1,54 +1,59 @@
 const db = require('../db')
 
-const empresa = {}
+const Empresas = {}
 
-empresa.getAll = (req, res) => {
+Empresas.getAll = (req, res) => {
     db.ref('Empresas/').on('value', (snap) => {
         if (snap.val() !== null) {
             res.json({
                 ok: true,
-                mensaje: 'todas las empresas',
+                mensaje: 'todas las Empresas',
                 payload: snap.val()
             })
         }
     })
 }
 
-empresa.add = (req, res) => {
-    db.ref('Empresa/' + req.id).once('value', (snap) => {
+Empresas.add = (req, res) => {
+    console.log(req.body)
+    db.ref('Empresas/' + req.body.rut).once('value', (snap) => {
         if (snap.val() === null) {
-            db.ref('Empresas/' + req.rut).set({
-                rut: req.rut,
-                nombre: req.nombre,
-                pass: req.pass,
-                correo: req.correo,
-                telefono: req.telefono
+            db.ref('Empresas/' + req.body.rut).set({
+                rut: req.body.rut,
+                nombre: req.body.nombre,
+                pass: req.body.pass,
+                correo: req.body.correo,
+                telefono: req.body.telefono
+            })
+            res.json({
+                ok: true,
+                mensaje: 'Empresa agregada con exito '
             })
         } else {
             res.json({
                 ok: false,
-                mensaje: 'La empresa ya existe'
+                mensaje: 'La Empresa ya existe'
             })
         }
     })
 }
 
-empresa.getByID = (req, res) => {
-    db.ref('Empresa/' + req.rut).once('value', (snap) => {
+Empresas.getByID = (req, res) => {
+    db.ref('Empresas/' + req.rut).once('value', (snap) => {
         if (snap.val() !== null) {
             res.json({
                 ok: true,
                 mensaje: 'Empresa encontrada',
-                empresa: snap.val()
+                Empresas: snap.val()
             })
         }
     })
 }
 
-empresa.remove = (req, res) => {
-    db.ref('Empresa/' + req.rut).once('value', (snap) => {
+Empresas.remove = (req, res) => {
+    db.ref('Empresas/' + req.rut).once('value', (snap) => {
         if (snap.val() !== null) {
-            db.ref('Empresa/' + req.rut).remove((err) => {
+            db.ref('Empresas/' + req.rut).remove((err) => {
                 if (err) {
                     res.send(err)
                 } else {
@@ -61,10 +66,10 @@ empresa.remove = (req, res) => {
         } else {
             res.json({
                 ok: false,
-                mensaje: 'No se ha encontrado la empresa'
+                mensaje: 'No se ha encontrado la Empresa'
             })
         }
     })
 }
 
-module.exports = empresa
+module.exports = Empresas
