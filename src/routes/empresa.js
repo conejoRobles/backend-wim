@@ -7,7 +7,7 @@ const bodyparser = require('body-parser');
 router.use(bodyparser.json())
 router.use(bodyparser.urlencoded({ extended: true }))
 
-router.get('/', empresas.getAll)
+router.get('/empresas', empresas.getAll)
 router.post('/addEmpresa', empresas.add)
 
 module.exports = router

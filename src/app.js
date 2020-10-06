@@ -25,6 +25,8 @@ app.use((err, req, res, next) => {
 })
 app.use(require('./routes/empresa'))
 app.use(require('./routes/pasajero'))
+app.use(require('./routes/pasajero'))
+app.use(require('./routes/login'))
 
 //Listen
 app.listen(app.get('port'), () => {

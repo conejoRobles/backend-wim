@@ -1,15 +1,12 @@
 const { Router } = require('express')
 const express = require('express')
 const router = express.Router()
-const pasajero = require('../controllers/pasajero')
+const login = require('../controllers/login')
 const bodyparser = require('body-parser');
 
 router.use(bodyparser.json())
 router.use(bodyparser.urlencoded({ extended: true }))
 
-router.get('/pasajeros', pasajero.getAll)
-router.get('/getPasajero', pasajero.getByID)
-router.post('/addPasajero', pasajero.add)
-router.delete('/removePasajero', pasajero.remove)
+router.post('/', login.log)
 
 module.exports = router
