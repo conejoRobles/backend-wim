@@ -50,7 +50,7 @@ pasajero.getByID = (req, res) => {
 }
 
 pasajero.remove = (req, res) => {
-    db.ref('Pasajeros/' + req.rut).once('value', (snap) => {
+    db.ref('Pasajeros/' + req.body.rut).once('value', (snap) => {
         if (snap.val() !== null) {
             db.ref('Pasajeros/' + req.rut).remove((err) => {
                 if (err) {
