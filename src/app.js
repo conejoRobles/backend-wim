@@ -5,8 +5,8 @@ const cors = require('cors')
 //inicialización de la app
 var app = express()
 app.use(cors())
-    //CORS
-app.use(function(req, res, next) {
+//CORS
+app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
     res.header("Access-Control-Allow-Headers",
@@ -26,6 +26,7 @@ app.use((err, req, res, next) => {
 app.use(require('./routes/empresa'))
 app.use(require('./routes/pasajero'))
 app.use(require('./routes/login'))
+app.use(require('./routes/noticia'))
 
 //Listen
 app.listen(app.get('port'), () => {

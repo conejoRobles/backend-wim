@@ -23,7 +23,7 @@ Empresas.add = (req, res) => {
                 pass: req.body.pass,
                 correo: req.body.correo,
                 telefono: req.body.telefono,
-                rol:'empresa'
+                rol: 'empresa'
             })
             res.json({
                 ok: true,
@@ -47,7 +47,8 @@ Empresas.edit = (req, res) => {
                 nombre: req.body.nombre,
                 pass: req.body.pass,
                 correo: req.body.correo,
-                telefono: req.body.telefono
+                telefono: req.body.telefono,
+                rol: 'empresa'
             })
             res.json({
                 ok: true,
