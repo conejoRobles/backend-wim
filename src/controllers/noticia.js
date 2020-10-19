@@ -2,9 +2,10 @@ const db = require('../db')
 const noticia = {}
 
 noticia.getAll = (req, res) => {
-    db.ref('Empresas/' + req.body.rut + '/recorridos/' + req.body.recorrido).once('value', (snap) => {
+    console.log(req.recorrido)
+    db.ref('Empresas/' + req.query.rut + '/recorridos/' + req.query.recorrido).once('value', (snap) => {
         if (snap.val() !== null) {
-            db.ref('Empresas/' + req.body.rut + '/recorridos/' + req.body.recorrido + '/Noticias/').once('value', (snap) => {
+            db.ref('Empresas/' + req.query.rut + '/recorridos/' + req.query.recorrido + '/Noticias/').once('value', (snap) => {
                 if (snap.val() !== null) {
                     res.json({
                         ok: true,
