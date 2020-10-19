@@ -14,7 +14,7 @@ app.use(function(req, res, next) {
     next();
 });
 //DEFINICIÓN DE PUERTO
-app.set('port', 3000)
+app.set('port', process.env.PORT || 3000)
 
 //Pagina de error de servidor
 app.use((err, req, res, next) => {
@@ -24,7 +24,6 @@ app.use((err, req, res, next) => {
     res.send('500 - Server Error')
 })
 app.use(require('./routes/empresa'))
-app.use(require('./routes/pasajero'))
 app.use(require('./routes/pasajero'))
 app.use(require('./routes/login'))
 

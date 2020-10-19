@@ -15,7 +15,6 @@ Empresas.getAll = (req, res) => {
 }
 
 Empresas.add = (req, res) => {
-    console.log(req.body)
     db.ref('Empresas/' + req.body.rut).once('value', (snap) => {
         if (snap.val() === null) {
             db.ref('Empresas/' + req.body.rut).set({
@@ -23,7 +22,8 @@ Empresas.add = (req, res) => {
                 nombre: req.body.nombre,
                 pass: req.body.pass,
                 correo: req.body.correo,
-                telefono: req.body.telefono
+                telefono: req.body.telefono,
+                rol:'empresa'
             })
             res.json({
                 ok: true,
@@ -33,6 +33,30 @@ Empresas.add = (req, res) => {
             res.json({
                 ok: false,
                 mensaje: 'La Empresa ya existe'
+            })
+        }
+    })
+}
+
+Empresas.edit = (req, res) => {
+    db.ref('Empresas/' + req.body.rut).once('value', (snap) => {
+        if (snap.val() !== null) {
+            db.ref('Empresas/' + req.body.rut).set({
+                ...snap.val(),
+                rut: req.body.rut,
+                nombre: req.body.nombre,
+                pass: req.body.pass,
+                correo: req.body.correo,
+                telefono: req.body.telefono
+            })
+            res.json({
+                ok: true,
+                mensaje: 'Datos de empresa modificados con éxito!'
+            })
+        } else {
+            res.json({
+                ok: false,
+                mensaje: 'No se ha logrado completar la modificación'
             })
         }
     })

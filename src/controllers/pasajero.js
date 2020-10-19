@@ -22,7 +22,8 @@ pasajero.add = (req, res) => {
                 nombre: req.body.nombre,
                 pass: req.body.pass,
                 correo: req.body.correo,
-                telefono: req.body.telefono
+                telefono: req.body.telefono,
+                rol:'pasajero'
             })
             res.json({
                 ok: true,
@@ -32,6 +33,31 @@ pasajero.add = (req, res) => {
             res.json({
                 ok: false,
                 mensaje: 'El pasajero ya esta registrado'
+            })
+        }
+    })
+}
+
+pasajero.edit = (req, res) => {
+    db.ref('Pasajeros/' + req.body.rut).once('value', (snap) => {
+        if (snap.val() !== null) {
+            db.ref('Pasajeros/' + req.body.rut).set({
+                ...snap.val(),
+                rut: req.body.rut,
+                nombre: req.body.nombre,
+                pass: req.body.pass,
+                correo: req.body.correo,
+                telefono: req.body.telefono,
+                rol:'pasajero'
+            })
+            res.json({
+                ok: true,
+                mensaje: 'Datos de empresa modificados con éxito!'
+            })
+        } else {
+            res.json({
+                ok: false,
+                mensaje: 'No se ha logrado completar la modificación'
             })
         }
     })

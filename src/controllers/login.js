@@ -2,7 +2,7 @@ const db = require('../db')
 
 const Login = {}
 
-Login.log = async(req, res) => {
+Login.log = async (req, res) => {
     await db.ref('Empresas/').once('value', (snap) => {
         if (snap.val()) {
             Object.values(snap.val()).map(empresa => {
@@ -10,7 +10,7 @@ Login.log = async(req, res) => {
                     if (empresa.pass == req.body.pass) {
                         return res.send({
                             ok: true,
-                            empresa,
+                            usuario: empresa,
                             mensaje: 'Inicio de sesión exitoso'
                         })
                     } else {
@@ -30,7 +30,7 @@ Login.log = async(req, res) => {
                     if (pasajero.pass == req.body.pass) {
                         return res.send({
                             ok: true,
-                            pasajero,
+                            usuario: pasajero,
                             mensaje: 'Inicio de sesión exitoso'
                         })
                     } else {

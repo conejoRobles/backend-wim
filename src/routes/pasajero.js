@@ -10,6 +10,7 @@ router.use(bodyparser.urlencoded({ extended: true }))
 router.get('/pasajeros', pasajero.getAll)
 router.get('/getPasajero', pasajero.getByID)
 router.post('/addPasajero', pasajero.add)
+router.post('/editPasajero', pasajero.edit)
 router.delete('/removePasajero', pasajero.remove)
 
 module.exports = router

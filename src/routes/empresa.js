@@ -9,5 +9,6 @@ router.use(bodyparser.urlencoded({ extended: true }))
 
 router.get('/empresas', empresas.getAll)
 router.post('/addEmpresa', empresas.add)
+router.post('/editEmpresa', empresas.edit)
 
 module.exports = router
