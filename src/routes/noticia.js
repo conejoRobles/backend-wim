@@ -9,6 +9,7 @@ router.use(bodyparser.urlencoded({ extended: true }))
 
 router.get('/Noticias', noticia.getAll)
 router.post('/addNoticia', noticia.add)
+router.post('/editNoticia', noticia.edit)
 router.post('/removeNoticia', noticia.remove)
 
 module.exports = router
