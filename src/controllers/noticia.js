@@ -35,8 +35,8 @@ noticia.add = (req, res) => {
                 id: req.body.id,
                 descripcion: req.body.descripcion,
                 titulo: req.body.titulo,
-                fechaTermino: '20/10/2020',
-                fechaPublicacion: '20/10/2020',
+                fechaTermino: req.body.fechaTermino,
+                fechaPublicacion: req.body.fechaPublicacion,
                 duracion: req.body.duracion
             })
             res.json({
