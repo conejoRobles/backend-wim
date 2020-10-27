@@ -53,6 +53,8 @@ noticia.add = (req, res) => {
 }
 
 noticia.edit = (req, res) => {
+    console.log(req.body.rut)
+    console.log(req.body.recorrido)
     db.ref('Empresas/' + req.body.rut + '/recorridos/' + req.body.recorrido).once('value', (snap) => {
         if (snap.val() !== null) {
             db.ref('Empresas/' + req.body.rut + '/recorridos/' + req.body.recorrido + '/Noticias/' + req.body.id).set({

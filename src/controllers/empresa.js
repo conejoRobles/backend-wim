@@ -97,4 +97,21 @@ Empresas.remove = (req, res) => {
     })
 }
 
+Empresas.getRecorridos = (req, res) => {
+    db.ref('Empresas/' + req.query.rut).once('value', (snap) => {
+        if (snap.val().recorridos) {
+            res.json({
+                ok: true,
+                mensaje: 'Recorridos guardadas por la empresa',
+                recorridos: snap.val().recorridos
+            })
+        } else {
+            res.json({
+                ok: false,
+                mensaje: 'No existen recorridos guardadas',
+            })
+        }
+    })
+}
+
 module.exports = Empresas

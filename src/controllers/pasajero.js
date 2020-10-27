@@ -1,4 +1,5 @@
 const db = require('../db')
+const fs = require('fs')
 const pasajero = {}
 
 pasajero.getAll = (req, res) => {
@@ -23,7 +24,7 @@ pasajero.add = (req, res) => {
                 pass: req.body.pass,
                 correo: req.body.correo,
                 telefono: req.body.telefono,
-                rol:'pasajero'
+                rol: 'pasajero'
             })
             res.json({
                 ok: true,
@@ -48,7 +49,7 @@ pasajero.edit = (req, res) => {
                 pass: req.body.pass,
                 correo: req.body.correo,
                 telefono: req.body.telefono,
-                rol:'pasajero'
+                rol: 'pasajero'
             })
             res.json({
                 ok: true,
@@ -96,5 +97,23 @@ pasajero.remove = (req, res) => {
         }
     })
 }
+
+pasajero.getEmpresas = (req, res) => {
+    db.ref('Pasajeros/' + req.query.rut).once('value', (snap) => {
+        if (snap.val().empresas) {
+            res.json({
+                ok: true,
+                mensaje: 'Empresas guardadas por el pasajero',
+                empresas: snap.val().empresas
+            })
+        } else {
+            res.json({
+                ok: false,
+                mensaje: 'No existen empresas guardadas',
+            })
+        }
+    })
+}
+
 
 module.exports = pasajero
