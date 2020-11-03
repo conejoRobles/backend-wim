@@ -27,6 +27,7 @@ app.use(require('./routes/empresa'))
 app.use(require('./routes/pasajero'))
 app.use(require('./routes/login'))
 app.use(require('./routes/recorrido'))
+app.use(require('./routes/horario'))
 app.use(require('./routes/noticia'))
 
 //Listen
