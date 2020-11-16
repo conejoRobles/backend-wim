@@ -10,5 +10,6 @@ router.use(bodyparser.urlencoded({ extended: true }))
 router.post('/addRecorrido', recorridos.addRecorrido)
 router.post('/editRecorrido', recorridos.editRecorrido)
 router.post('/removeRecorrido', recorridos.removeRecorrido)
+router.post('/searchRecorrido', recorridos.searchRecorrido)
 
 module.exports = router
