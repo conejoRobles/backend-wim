@@ -9,6 +9,7 @@ router.use(bodyparser.urlencoded({ extended: true }))
 
 router.get('/empresas', empresas.getAll)
 router.get('/getRecorridos', empresas.getRecorridos)
+router.get('/getRecorridoById', empresas.getRecorridoById)
 router.post('/addEmpresa', empresas.add)
 router.post('/editEmpresa', empresas.edit)
 

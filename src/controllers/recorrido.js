@@ -26,6 +26,7 @@ Recorridos.addRecorrido = async (req, res) => {
 						origen: req.body.origen,
 						destino: req.body.destino,
 						empresa: req.body.rut,
+						nombre: req.body.nombre,
 						recorrido: req.body.id,
 					})
 					res.json({
@@ -68,6 +69,7 @@ Recorridos.editRecorrido = (req, res) => {
 				origen: req.body.origen,
 				destino: req.body.destino,
 				empresa: req.body.rut,
+				nombre: req.body.nombre,
 				recorrido: req.body.id,
 			})
 			res.json({
@@ -102,55 +104,22 @@ Recorridos.removeRecorrido = (req, res) => {
 	})
 }
 
-Recorridos.searchRecorrido = (req, res) => {
-	let horaInicio = new Date(req.body.horaInicio)
-	let horaTermino = new Date(req.body.horaTermino)
-	db.ref('Recorridos/' + req.body.origen + '/' + req.body.destino).once('value', (snap) => {
-		if (snap.val() != null) {
-			let reco = Object.values(snap.val())
-			let respuesta = []
-			reco.map(x => {
-				db.ref('Empresas/' + x.empresa + "/recorridos/" + x.recorrido).once('value', (snap) => {
-					let horarios = Object.values(snap.val().Horarios)
-					horarios.map(h => {
-						let horaI = new Date(h.horaInicio)
-						let horaT = new Date(h.horaTermino)
-						if (horaI.getHours() >= horaInicio.getHours()) {
-							if (horaI.getHours() == horaInicio.getHours()) {
-								if (horaI.getMinutes() >= horaInicio.getMinutes()) {
-									if (h.dias[req.body.dia].activo) {
-										db.ref('Empresas/' + x.empresa).once('value', (sp) => {
-											respuesta.push({
-												empresa: sp.val().nombre,
-												origen: snap.val().origen,
-												destino: snap.val().destino,
-												horario: h
-											})
-
-										})
-									}
-								}
-							} else {
-
-							}
-						}
-					})
-				})
+Recorridos.searchRecorrido = async (req, res) => {
+	db.ref('Recorridos/' + req.body.origen + '/' + req.body.destino).once('value', async (snap) => {
+		if (snap.val() != undefined && snap.val() != null) {
+			let recorridos = Object.values(snap.val())
+			res.json({
+				ok: true,
+				recorridos,
+				mensaje: 'recorridos desde' + req.body.origen + ' - ' + req.body.destino
 			})
-			console.log(respuesta)
-			//sendInfo(res, respuesta)
 		} else {
 			res.json({
 				ok: false,
-				mensaje: 'no hay recorridos para ese origen y destino'
+				mensaje: 'recorridos desde' + req.body.origen + ' - ' + req.body.destino + ' No encontrados'
 			})
 		}
 	})
 }
-const sendInfo = async (res, data) => {
-	res.json({
-		ok: true,
-		payload: data
-	})
-}
+
 module.exports = Recorridos

@@ -114,4 +114,21 @@ Empresas.getRecorridos = (req, res) => {
     })
 }
 
+Empresas.getRecorridoById = (req, res) => {
+    db.ref('Empresas/' + req.query.empresa + '/recorridos/' + req.query.recorrido).once('value', (snap) => {
+        if (snap.val() != null && snap.val() != undefined) {
+            res.json({
+                ok: true,
+                mensaje: 'Recorrido encontrado',
+                recorrido: snap.val()
+            })
+        } else {
+            res.json({
+                ok: false,
+                mensaje: 'No existen el recorrido',
+            })
+        }
+    })
+}
+
 module.exports = Empresas
