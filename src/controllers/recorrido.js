@@ -104,6 +104,7 @@ Recorridos.removeRecorrido = (req, res) => {
 	})
 }
 
+
 Recorridos.searchRecorrido = async (req, res) => {
 	db.ref('Recorridos/' + req.body.origen + '/' + req.body.destino).once('value', async (snap) => {
 		if (snap.val() != undefined && snap.val() != null) {

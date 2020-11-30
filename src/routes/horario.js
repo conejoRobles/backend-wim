@@ -9,6 +9,7 @@ router.use(bodyparser.urlencoded({ extended: true }))
 
 router.post('/addHorario', Horarios.addHorario)
 router.post('/editHorario', Horarios.editHorario)
+router.post('/searchHorario', Horarios.searchHorario)
 router.post('/removeHorario', Horarios.removeHorario)
 
 module.exports = router
