@@ -72,4 +72,6 @@ Horarios.removeHorario = (req, res) => {
 
 }
 
+
+
 module.exports = Horarios

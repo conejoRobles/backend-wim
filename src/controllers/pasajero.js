@@ -1,5 +1,6 @@
 const db = require('../db')
 const fs = require('fs')
+const { v4: uuid } = require('uuid');
 const pasajero = {}
 
 pasajero.getAll = (req, res) => {
@@ -104,12 +105,75 @@ pasajero.getEmpresas = (req, res) => {
             res.json({
                 ok: true,
                 mensaje: 'Empresas guardadas por el pasajero',
-                empresas: snap.val().empresas
+                empresas: snap.val().empresas,
+                favoritos: snap.val().favoritos,
             })
         } else {
             res.json({
                 ok: false,
                 mensaje: 'No existen empresas guardadas',
+            })
+        }
+    })
+}
+
+pasajero.addFavorito = (req, res) => {
+    db.ref('Pasajeros/' + req.body.rut + "/empresas/" + req.body.empresa).update(
+        { rut: req.body.empresa, nombre: req.body.nombreEmpresa, }
+    )
+    db.ref('Pasajeros/' + req.body.rut + "/empresas/" + req.body.empresa + "/recorridos/" + req.body.recorrido).update(
+        { id: req.body.recorrido }
+    )
+    db.ref('Pasajeros/' + req.body.rut + "/empresas/" + req.body.empresa + "/recorridos/" + req.body.recorrido + '/Horarios/' + req.body.id).once('value', (snap) => {
+        if (snap.val() === null) {
+            db.ref('Pasajeros/' + req.body.rut + "/empresas/" + req.body.empresa + "/recorridos/" + req.body.recorrido + '/Horarios/' + req.body.id).set({
+                id: req.body.id,
+                empresa: req.body.empresa,
+                recorrido: req.body.recorrido
+            })
+        }
+    })
+    db.ref('Pasajeros/' + req.body.rut + "/favoritos/" + req.body.origen).update({
+        id: uuid()
+    })
+    db.ref('Pasajeros/' + req.body.rut + "/favoritos/" + req.body.origen + "/" + req.body.destino).update({
+        origen: req.body.origen,
+        destino: req.body.destino,
+        id: uuid()
+    })
+    db.ref('Pasajeros/' + req.body.rut + "/favoritos/" + req.body.origen + "/" + req.body.destino + '/Horarios/' + req.body.id).once('value', (snap) => {
+        if (snap.val() === null) {
+            db.ref('Pasajeros/' + req.body.rut + "/favoritos/" + req.body.origen + "/" + req.body.destino + '/Horarios/' + req.body.id).set({
+                id: req.body.id,
+                empresa: req.body.empresa,
+                nombre: req.body.nombreEmpresa,
+                recorrido: req.body.recorrido
+            })
+            res.json({
+                ok: true,
+                mensaje: 'Su Horario ha sido agregado con exito'
+            })
+        } else {
+            res.json({
+                ok: false,
+                mensaje: 'el Horario ya existe'
+            })
+        }
+    })
+}
+
+pasajero.removeFavorito = (req, res) => {
+    db.ref('Pasajeros/' + req.body.rut + "/empresas/" + req.body.empresa + "/recorridos/" + req.body.recorrido + '/Horarios/' + req.body.id).once('value', (snap) => {
+        if (snap.val() != null) {
+            db.ref('Pasajeros/' + req.body.rut + "/empresas/" + req.body.empresa + "/recorridos/" + req.body.recorrido + '/Horarios/' + req.body.id).remove()
+            res.json({
+                ok: true,
+                mensaje: 'Su Horario ha sido eliminado con exito'
+            })
+        } else {
+            res.json({
+                ok: false,
+                mensaje: 'No se ha podido eliminar su horario, el horario no existe'
             })
         }
     })

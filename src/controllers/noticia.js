@@ -39,6 +39,27 @@ noticia.add = (req, res) => {
                 fechaPublicacion: req.body.fechaPublicacion,
                 duracion: req.body.duracion
             })
+            // res.json({
+            //     ok: true,
+            //     mensaje: 'Noticia Agregada!'
+            // })
+        } else {
+            // res.json({
+            //     ok: false,
+            //     mensaje: 'El recorrido no existe',
+            // })
+        }
+    })
+    db.ref('Empresas/' + req.body.rut + '/recorridos/' + req.body.recorrido + '/Horarios/' + req.body.horario).once('value', (snap) => {
+        if (snap.val() !== null) {
+            db.ref('Empresas/' + req.body.rut + '/recorridos/' + req.body.recorrido + '/Horarios/' + req.body.horario).set({
+                id: req.body.id,
+                descripcion: req.body.descripcion,
+                titulo: req.body.titulo,
+                fechaTermino: req.body.fechaTermino,
+                fechaPublicacion: req.body.fechaPublicacion,
+                duracion: req.body.duracion
+            })
             res.json({
                 ok: true,
                 mensaje: 'Noticia Agregada!'
@@ -46,7 +67,7 @@ noticia.add = (req, res) => {
         } else {
             res.json({
                 ok: false,
-                mensaje: 'El recorrido no existe',
+                mensaje: 'El horario no existe',
             })
         }
     })
