@@ -64,7 +64,7 @@ Horarios.searchHorario = (req, res) => {
 			})
 		} else {
 			res.json({
-				ok: false,
+				ok: falseconso,
 				mensaje: 'el horario no existe',
 			})
 		}

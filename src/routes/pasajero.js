@@ -14,6 +14,6 @@ router.post('/addPasajero', pasajero.add)
 router.post('/editPasajero', pasajero.edit)
 router.delete('/removePasajero', pasajero.remove)
 router.post('/addFavorito', pasajero.addFavorito)
-router.delete('/removeFavorito', pasajero.removeFavorito)
+router.post('/removeFavorito', pasajero.removeFavorito)
 
 module.exports = router

@@ -166,16 +166,18 @@ pasajero.removeFavorito = (req, res) => {
     db.ref('Pasajeros/' + req.body.rut + "/empresas/" + req.body.empresa + "/recorridos/" + req.body.recorrido + '/Horarios/' + req.body.id).once('value', (snap) => {
         if (snap.val() != null) {
             db.ref('Pasajeros/' + req.body.rut + "/empresas/" + req.body.empresa + "/recorridos/" + req.body.recorrido + '/Horarios/' + req.body.id).remove()
-            res.json({
-                ok: true,
-                mensaje: 'Su Horario ha sido eliminado con exito'
-            })
-        } else {
-            res.json({
-                ok: false,
-                mensaje: 'No se ha podido eliminar su horario, el horario no existe'
-            })
         }
+    })
+
+    db.ref('Pasajeros/' + req.body.rut + "/favoritos/" + req.body.origen + "/" + req.body.destino + '/Horarios/' + req.body.id).remove()
+    db.ref('Pasajeros/' + req.body.rut + "/favoritos/" + req.body.origen + "/" + req.body.destino).once('value', snap => {
+        if (snap.val().Horarios == null || snap.val().Horarios == undefined) {
+            db.ref('Pasajeros/' + req.body.rut + "/favoritos/" + req.body.origen + "/" + req.body.destino).remove()
+        }
+    })
+    res.json({
+        ok: true,
+        mensaje: 'Su Horario ha sido eliminado con exito'
     })
 }
 
