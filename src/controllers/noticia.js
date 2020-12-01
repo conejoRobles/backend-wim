@@ -29,56 +29,25 @@ noticia.getAll = (req, res) => {
 }
 
 noticia.add = (req, res) => {
-    db.ref('Empresas/' + req.body.rut + '/recorridos/' + req.body.recorrido).once('value', (snap) => {
-        if (snap.val() !== null) {
-            db.ref('Empresas/' + req.body.rut + '/recorridos/' + req.body.recorrido + '/Noticias/' + req.body.id).set({
-                id: req.body.id,
-                descripcion: req.body.descripcion,
-                titulo: req.body.titulo,
-                fechaTermino: req.body.fechaTermino,
-                fechaPublicacion: req.body.fechaPublicacion,
-                duracion: req.body.duracion
-            })
-            // res.json({
-            //     ok: true,
-            //     mensaje: 'Noticia Agregada!'
-            // })
-        } else {
-            // res.json({
-            //     ok: false,
-            //     mensaje: 'El recorrido no existe',
-            // })
-        }
+    db.ref('Empresas/' + req.body.rut + '/recorridos/' + req.body.recorrido + '/Horarios/' + req.body.horario + '/Noticias/' + req.body.id).set({
+        id: req.body.id,
+        descripcion: req.body.descripcion,
+        titulo: req.body.titulo,
+        fechaTermino: req.body.fechaTermino,
+        fechaPublicacion: req.body.fechaPublicacion,
+        duracion: req.body.duracion
     })
-    db.ref('Empresas/' + req.body.rut + '/recorridos/' + req.body.recorrido + '/Horarios/' + req.body.horario).once('value', (snap) => {
-        if (snap.val() !== null) {
-            db.ref('Empresas/' + req.body.rut + '/recorridos/' + req.body.recorrido + '/Horarios/' + req.body.horario).set({
-                id: req.body.id,
-                descripcion: req.body.descripcion,
-                titulo: req.body.titulo,
-                fechaTermino: req.body.fechaTermino,
-                fechaPublicacion: req.body.fechaPublicacion,
-                duracion: req.body.duracion
-            })
-            res.json({
-                ok: true,
-                mensaje: 'Noticia Agregada!'
-            })
-        } else {
-            res.json({
-                ok: false,
-                mensaje: 'El horario no existe',
-            })
-        }
+    res.json({
+        ok: true,
+        mensaje: 'Noticia Agregada!'
     })
 }
 
 noticia.edit = (req, res) => {
-    console.log(req.body.rut)
-    console.log(req.body.recorrido)
-    db.ref('Empresas/' + req.body.rut + '/recorridos/' + req.body.recorrido).once('value', (snap) => {
+
+    db.ref('Empresas/' + req.body.rut + '/recorridos/' + req.body.recorrido + '/Horarios/' + req.body.horario + '/Noticias/' + req.body.id).once('value', (snap) => {
         if (snap.val() !== null) {
-            db.ref('Empresas/' + req.body.rut + '/recorridos/' + req.body.recorrido + '/Noticias/' + req.body.id).set({
+            db.ref('Empresas/' + req.body.rut + '/recorridos/' + req.body.recorrido + '/Horarios/' + req.body.horario + '/Noticias/' + req.body.id).update({
                 id: req.body.id,
                 descripcion: req.body.descripcion,
                 titulo: req.body.titulo,
@@ -88,31 +57,22 @@ noticia.edit = (req, res) => {
             })
             res.json({
                 ok: true,
-                mensaje: 'Noticia Agregada!'
+                mensaje: 'Noticia editada!'
             })
         } else {
             res.json({
                 ok: false,
-                mensaje: 'El recorrido no existe',
+                mensaje: 'La noticia no existe!',
             })
         }
     })
 }
 
 noticia.remove = (req, res) => {
-    db.ref('Empresas/' + req.body.rut + '/recorridos/' + req.body.recorrido).once('value', (snap) => {
-        if (snap.val() !== null) {
-            db.ref('Empresas/' + req.body.rut + '/recorridos/' + req.body.recorrido + '/Noticias/' + req.body.id).remove()
-            res.json({
-                ok: true,
-                mensaje: 'Noticia Eliminada!'
-            })
-        } else {
-            res.json({
-                ok: false,
-                mensaje: 'El recorrido no existe',
-            })
-        }
+    db.ref('Empresas/' + req.body.rut + '/recorridos/' + req.body.recorrido + '/Horarios/' + req.body.horario + '/Noticias/' + req.body.id).remove()
+    res.json({
+        ok: true,
+        mensaje: 'Noticia Eliminada!'
     })
 }
 
