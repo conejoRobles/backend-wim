@@ -56,18 +56,25 @@ Horarios.editHorario = (req, res) => {
 
 Horarios.searchHorario = (req, res) => {
 	db.ref('Empresas/' + req.body.empresa + "/recorridos/" + req.body.recorrido + '/Horarios/' + req.body.horario).once('value', (snap) => {
-		if (snap.val() != null && snap.val() != undefined) {
-			res.json({
-				ok: true,
-				mensaje: 'horario encontrado',
-				horario: snap.val()
-			})
-		} else {
-			res.json({
-				ok: falseconso,
-				mensaje: 'el horario no existe',
-			})
-		}
+		let precios = []
+		db.ref('Empresas/' + req.body.empresa + "/recorridos/" + req.body.recorrido).once('value', (sp) => {
+			if (sp.val().precios != null && sp.val().precios != undefined) {
+				precios = sp.val().precios
+			}
+			if (snap.val() != null && snap.val() != undefined) {
+				res.json({
+					ok: true,
+					mensaje: 'horario encontrado',
+					horario: snap.val(),
+					precios
+				})
+			} else {
+				res.json({
+					ok: false,
+					mensaje: 'el horario no existe',
+				})
+			}
+		})
 	})
 }
 

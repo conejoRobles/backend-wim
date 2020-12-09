@@ -16,20 +16,48 @@ pasajero.getAll = (req, res) => {
 }
 
 pasajero.add = (req, res) => {
-
     db.ref('Pasajeros/' + req.body.rut).once('value', (snap) => {
         if (snap.val() === null) {
-            db.ref('Pasajeros/' + req.body.rut).set({
-                rut: req.body.rut,
-                nombre: req.body.nombre,
-                pass: req.body.pass,
-                correo: req.body.correo,
-                telefono: req.body.telefono,
-                rol: 'pasajero'
-            })
-            res.json({
-                ok: true,
-                mensaje: 'Pasajero agregado con exito '
+            db.ref('Empresas/').once('value', (snap) => {
+                let ready = false
+                Object.values(snap.val()).map(x => {
+                    if (x.correo == req.body.correo) {
+                        ready = true
+                    }
+                })
+                if (!ready) {
+                    db.ref('Pasajeros/').once('value', (snap) => {
+                        Object.values(snap.val()).map(y => {
+                            if (y.correo == req.body.correo) {
+                                ready = true
+                            }
+                        })
+                        if (!ready) {
+                            db.ref('Pasajeros/' + req.body.rut).set({
+                                rut: req.body.rut,
+                                nombre: req.body.nombre,
+                                pass: req.body.pass,
+                                correo: req.body.correo,
+                                telefono: req.body.telefono,
+                                rol: 'pasajero'
+                            })
+                            res.json({
+                                ok: true,
+                                mensaje: 'Empresa agregada con exito '
+                            })
+                        } else {
+                            res.json({
+                                ok: false,
+                                mensaje: 'Ya se ha registrado un usuario con ese correo'
+                            })
+                        }
+                    })
+                } else {
+                    res.json({
+                        ok: false,
+                        mensaje: 'Ya se ha registrado un usuario con ese correo'
+                    })
+                }
             })
         } else {
             res.json({
@@ -101,11 +129,10 @@ pasajero.remove = (req, res) => {
 
 pasajero.getEmpresas = (req, res) => {
     db.ref('Pasajeros/' + req.query.rut).once('value', (snap) => {
-        if (snap.val().empresas) {
+        if (snap.val().favoritos) {
             res.json({
                 ok: true,
                 mensaje: 'Empresas guardadas por el pasajero',
-                empresas: snap.val().empresas,
                 favoritos: snap.val().favoritos,
             })
         } else {
@@ -118,23 +145,9 @@ pasajero.getEmpresas = (req, res) => {
 }
 
 pasajero.addFavorito = (req, res) => {
-    db.ref('Pasajeros/' + req.body.rut + "/empresas/" + req.body.empresa).update(
-        { rut: req.body.empresa, nombre: req.body.nombreEmpresa, }
-    )
-    db.ref('Pasajeros/' + req.body.rut + "/empresas/" + req.body.empresa + "/recorridos/" + req.body.recorrido).update(
-        { id: req.body.recorrido }
-    )
-    db.ref('Pasajeros/' + req.body.rut + "/empresas/" + req.body.empresa + "/recorridos/" + req.body.recorrido + '/Horarios/' + req.body.id).once('value', (snap) => {
-        if (snap.val() === null) {
-            db.ref('Pasajeros/' + req.body.rut + "/empresas/" + req.body.empresa + "/recorridos/" + req.body.recorrido + '/Horarios/' + req.body.id).set({
-                id: req.body.id,
-                empresa: req.body.empresa,
-                recorrido: req.body.recorrido
-            })
-        }
-    })
     db.ref('Pasajeros/' + req.body.rut + "/favoritos/" + req.body.origen).update({
-        id: uuid()
+        id: uuid(),
+        origen: req.body.origen,
     })
     db.ref('Pasajeros/' + req.body.rut + "/favoritos/" + req.body.origen + "/" + req.body.destino).update({
         origen: req.body.origen,
@@ -163,12 +176,6 @@ pasajero.addFavorito = (req, res) => {
 }
 
 pasajero.removeFavorito = (req, res) => {
-    db.ref('Pasajeros/' + req.body.rut + "/empresas/" + req.body.empresa + "/recorridos/" + req.body.recorrido + '/Horarios/' + req.body.id).once('value', (snap) => {
-        if (snap.val() != null) {
-            db.ref('Pasajeros/' + req.body.rut + "/empresas/" + req.body.empresa + "/recorridos/" + req.body.recorrido + '/Horarios/' + req.body.id).remove()
-        }
-    })
-
     db.ref('Pasajeros/' + req.body.rut + "/favoritos/" + req.body.origen + "/" + req.body.destino + '/Horarios/' + req.body.id).remove()
     db.ref('Pasajeros/' + req.body.rut + "/favoritos/" + req.body.origen + "/" + req.body.destino).once('value', snap => {
         if (snap.val().Horarios == null || snap.val().Horarios == undefined) {

@@ -17,17 +17,46 @@ Empresas.getAll = (req, res) => {
 Empresas.add = (req, res) => {
     db.ref('Empresas/' + req.body.rut).once('value', (snap) => {
         if (snap.val() === null) {
-            db.ref('Empresas/' + req.body.rut).set({
-                rut: req.body.rut,
-                nombre: req.body.nombre,
-                pass: req.body.pass,
-                correo: req.body.correo,
-                telefono: req.body.telefono,
-                rol: 'empresa'
-            })
-            res.json({
-                ok: true,
-                mensaje: 'Empresa agregada con exito '
+            db.ref('Empresas/').once('value', (snap) => {
+                let ready = false
+                Object.values(snap.val()).map(x => {
+                    if (x.correo == req.body.correo) {
+                        ready = true
+                    }
+                })
+                if (!ready) {
+                    db.ref('Pasajeros/').once('value', (snap) => {
+                        Object.values(snap.val()).map(y => {
+                            if (y.correo == req.body.correo) {
+                                ready = true
+                            }
+                        })
+                        if (!ready) {
+                            db.ref('Empresas/' + req.body.rut).set({
+                                rut: req.body.rut,
+                                nombre: req.body.nombre,
+                                pass: req.body.pass,
+                                correo: req.body.correo,
+                                telefono: req.body.telefono,
+                                rol: 'empresa'
+                            })
+                            res.json({
+                                ok: true,
+                                mensaje: 'Empresa agregada con exito '
+                            })
+                        } else {
+                            res.json({
+                                ok: false,
+                                mensaje: 'Ya se ha registrado un usuario con ese correo'
+                            })
+                        }
+                    })
+                } else {
+                    res.json({
+                        ok: false,
+                        mensaje: 'Ya se ha registrado un usuario con ese correo'
+                    })
+                }
             })
         } else {
             res.json({
@@ -117,10 +146,12 @@ Empresas.getRecorridos = (req, res) => {
 Empresas.getRecorridoById = (req, res) => {
     db.ref('Empresas/' + req.query.empresa + '/recorridos/' + req.query.recorrido).once('value', (snap) => {
         if (snap.val() != null && snap.val() != undefined) {
-            res.json({
-                ok: true,
-                mensaje: 'Recorrido encontrado',
-                recorrido: snap.val()
+            db.ref('Empresas/' + req.query.empresa).once('value', (sp) => {
+                res.json({
+                    ok: true,
+                    mensaje: 'Recorrido encontrado',
+                    recorrido: { ...snap.val(), telefono: sp.val().telefono }
+                })
             })
         } else {
             res.json({
