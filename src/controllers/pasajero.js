@@ -145,33 +145,41 @@ pasajero.getEmpresas = (req, res) => {
 }
 
 pasajero.addFavorito = (req, res) => {
-    db.ref('Pasajeros/' + req.body.rut + "/favoritos/" + req.body.origen).update({
-        id: uuid(),
-        origen: req.body.origen,
-    })
-    db.ref('Pasajeros/' + req.body.rut + "/favoritos/" + req.body.origen + "/" + req.body.destino).update({
-        origen: req.body.origen,
-        destino: req.body.destino,
-        id: uuid()
-    })
-    db.ref('Pasajeros/' + req.body.rut + "/favoritos/" + req.body.origen + "/" + req.body.destino + '/Horarios/' + req.body.id).once('value', (snap) => {
-        if (snap.val() === null) {
-            db.ref('Pasajeros/' + req.body.rut + "/favoritos/" + req.body.origen + "/" + req.body.destino + '/Horarios/' + req.body.id).set({
-                id: req.body.id,
-                empresa: req.body.empresa,
-                nombre: req.body.nombreEmpresa,
-                recorrido: req.body.recorrido
-            })
-            res.json({
-                ok: true,
-                mensaje: 'Su Horario ha sido agregado con exito'
-            })
-        } else {
-            res.json({
-                ok: false,
-                mensaje: 'el Horario ya existe'
+    db.ref('Pasajeros/' + req.body.rut + "/favoritos/" + req.body.origen).once('value', snap => {
+        if (snap.val() == null && snap.val() == undefined) {
+            db.ref('Pasajeros/' + req.body.rut + "/favoritos/" + req.body.origen).set({
+                id: uuid(),
+                origen: req.body.origen,
             })
         }
+        db.ref('Pasajeros/' + req.body.rut + "/favoritos/" + req.body.origen + "/" + req.body.destino).once('value', snap => {
+            if (snap.val() == null && snap.val() == undefined) {
+                db.ref('Pasajeros/' + req.body.rut + "/favoritos/" + req.body.origen + "/" + req.body.destino).set({
+                    origen: req.body.origen,
+                    destino: req.body.destino,
+                    id: uuid()
+                })
+            }
+            db.ref('Pasajeros/' + req.body.rut + "/favoritos/" + req.body.origen + "/" + req.body.destino + '/Horarios/' + req.body.id).once('value', (snap) => {
+                if (snap.val() === null) {
+                    db.ref('Pasajeros/' + req.body.rut + "/favoritos/" + req.body.origen + "/" + req.body.destino + '/Horarios/' + req.body.id).set({
+                        id: req.body.id,
+                        empresa: req.body.empresa,
+                        nombre: req.body.nombreEmpresa,
+                        recorrido: req.body.recorrido
+                    })
+                    res.json({
+                        ok: true,
+                        mensaje: 'Su Horario ha sido agregado con exito'
+                    })
+                } else {
+                    res.json({
+                        ok: false,
+                        mensaje: 'el Horario ya existe'
+                    })
+                }
+            })
+        })
     })
 }
 
@@ -180,6 +188,11 @@ pasajero.removeFavorito = (req, res) => {
     db.ref('Pasajeros/' + req.body.rut + "/favoritos/" + req.body.origen + "/" + req.body.destino).once('value', snap => {
         if (snap.val().Horarios == null || snap.val().Horarios == undefined) {
             db.ref('Pasajeros/' + req.body.rut + "/favoritos/" + req.body.origen + "/" + req.body.destino).remove()
+            db.ref('Pasajeros/' + req.body.rut + "/favoritos/" + req.body.origen).once('value', snap => {
+                if (Object.keys(snap.val()).length == 2) {
+                    db.ref('Pasajeros/' + req.body.rut + "/favoritos/" + req.body.origen).remove()
+                }
+            })
         }
     })
     res.json({
