@@ -1,46 +1,7 @@
 const db = require('../db')
-const nodemailer = require("nodemailer");
+const { auth } = require('firebase');
 const Empresas = {}
 
-
-Empresas.contacto = (req, res) => {
-    const nombre = req.body.nombre
-    const rut = req.body.rut
-    const email = req.body.email
-    const asunto = req.body.asunto
-    const descripcion = req.body.descripcion
-
-    const emisorPlataforma = nodemailer.createTransport({
-        service: 'Gmail',
-        auth: {
-            user: 'gestionsmapp@gmail.com',
-            pass: 'smapp2020'
-        }
-    })
-    let payload = {
-        from: nombre,
-        to: 'gestionsmapp@gmail.com',
-        subject: asunto,
-        text: `Se ha presentado un problema y ${nombre} con rut ${rut} y correo ${email}, quiere contactarse contigo, la razon es: ${asunto}.\n Ademas agregó esto:\n ${descripcion}`
-    }
-
-    emisorPlataforma.sendMail(payload, (error) => {
-        if (error) {
-            console.log('Error Email: ' + error)
-            return res.status(500).json({
-                ok: false,
-                mensaje: error.message
-            })
-        } else {
-            console.log('Email enviado')
-            return res.status(200).json({
-                ok: true,
-                mensaje: 'Email enviado',
-                payload: descripcion
-            })
-        }
-    })
-}
 
 Empresas.getAll = (req, res) => {
     db.ref('Empresas/').on('value', (snap) => {

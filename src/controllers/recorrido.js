@@ -1,9 +1,8 @@
-
 const db = require('../db')
+const moment = require('moment');
 
 const Recorridos = {}
 
-const moment = require('moment');
 
 Recorridos.addRecorrido = async (req, res) => {
 
